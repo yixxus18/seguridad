@@ -11,6 +11,8 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
+        "laravel/ui": "^4.6",
+        "resend/resend-php": "^0.15.2",
         "spatie/laravel-activitylog": "^4.9"
     },
     "require-dev": {

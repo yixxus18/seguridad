@@ -101,11 +101,25 @@ class AuthenticatedSessionController extends Controller
     // Método para verificar el código 2FA
     public function verifyTwoFactor(Request $request)
     {
-        $request->validate(['code' => 'required|numeric|digits:6']);
+        $request->validate(['code' => 'required|numeric|digits:6', 'g-recaptcha-response' => 'required'] , [
+            'g-recaptcha-response.required' => 'Por favor completa la verificación de seguridad (reCAPTCHA).',
+        ]);
 
         if (!$request->session()->has('2fa_user_id')) {
             return redirect()->route('login')
                 ->withErrors(['email' => 'AUTH003:La sesión ha expirado. Por favor, inicie sesión nuevamente.']);
+        }
+
+	$response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => config('services.recaptcha.secret_key'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip(),
+        ]);
+
+        $recaptchaResponse = $response->json();
+
+        if (!$recaptchaResponse['success']) {
+            return back()->withErrors(['g-recaptcha-response' => 'Verificación de reCAPTCHA fallida.'])->withInput();
         }
 
         try {

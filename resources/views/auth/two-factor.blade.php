@@ -8,6 +8,7 @@
     <meta http-equiv="X-Frame-Options" content="DENY">
     <title>Verificación en Dos Pasos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body class="bg-gradient-to-r from-purple-100 to-blue-100">
@@ -40,8 +41,11 @@
                         @error('code')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
+			@error('g-recaptcha-response')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-
+		    <div class="g-recaptcha" data-sitekey="6LebH8oqAAAAAJ6xnY3CRAGsTnmUnPa_NALnQw1k"></div>
                     <button type="submit"
                         class="w-full px-4 py-3 font-medium text-white transition-colors duration-300 bg-purple-600 rounded-lg hover:bg-purple-700">
                         Verificar Código
